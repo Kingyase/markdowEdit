@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a6e1fae7-1c04-48f3-b613-8ab87fd87471" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/markdownEdit.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/app_icon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/dict/ecdict.sqlite" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/models/translate-en_zh.argosmodel" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_fix_enger.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_writ_engine.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/build_ecdict.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/build_ecdict.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/md_renderer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/md_renderer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/paragraphs.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/paragraphs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/transate/engine.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/translat/engine.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/translate/dict_cache.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/translate/dict_cache.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/translate/engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/translate/engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/translate/hover.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/translate/hover.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/translate/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/translate/worker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/editor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/editor_tab.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor_tab.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/main_window.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/preview.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/preview.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/translation_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/translation_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/chrome.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/chrome.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/debounce.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/debounce.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/paths.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/paths.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="3EuGWS5K3XDGlCbDNgEv2VTy7T4" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-495700d161d3-aa17d162503b-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-243.22562.220" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="a6e1fae7-1c04-48f3-b613-8ab87fd87471" name="更改" comment="" />
+      <created>1781021073865</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1781021073865</updated>
+    </task>
+    <servers />
+  </component>
+</project>

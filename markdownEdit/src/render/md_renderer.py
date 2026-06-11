@@ -20,19 +20,27 @@ th, td { border: 1px solid #dfe2e5; padding: 6px 13px; }
 
 
 class MarkdownRenderer:
+    """Convert Markdown text to styled HTML with GitHub-flavored CSS."""
+    # 将 Markdown 文本转换为 GitHub 风格的 HTML
+
     def __init__(self) -> None:
+        """Initialize the Markdown parser with common extensions enabled."""
+        # 初始化 Markdown 解析器，启用常用扩展
         self._md = markdown.Markdown(
             extensions=["extra", "fenced_code", "codehilite", "toc", "tables"],
             extension_configs={"codehilite": {"guess_lang": False, "noclasses": True}},
         )
 
     def render(self, text: str) -> str:
+        """Convert Markdown text to a complete HTML page."""
+        # 将 Markdown 文本转换为完整的 HTML 页面
         self._md.reset()
         body = self._md.convert(text)
         return self._wrap(body)
 
     def render_bilingual(self, pairs: list[tuple[str, str]]) -> str:
         """Render a list of (original_md, translation_text) blocks side-by-side."""
+        # 将 (原文MD, 译文文本) 列表渲染为左右对照区块
         parts = []
         for original, translation in pairs:
             self._md.reset()
@@ -44,6 +52,7 @@ class MarkdownRenderer:
 
     def render_translation_only(self, translations: list[str]) -> str:
         """Render a sequence of translated paragraphs as standalone markdown."""
+        # 将翻译段落序列渲染为独立 Markdown
         parts = []
         for translation in translations:
             if translation:
@@ -55,4 +64,6 @@ class MarkdownRenderer:
 
     @staticmethod
     def _wrap(body: str) -> str:
+        """Wrap body HTML in a full document with DOCTYPE, charset, and CSS."""
+        # 将 body HTML 包装为包含 DOCTYPE、字符集和 CSS 的完整文档
         return f"<!doctype html><html><head><meta charset='utf-8'><style>{_BASE_CSS}</style></head><body>{body}</body></html>"

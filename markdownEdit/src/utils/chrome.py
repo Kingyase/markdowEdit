@@ -16,6 +16,8 @@ from pathlib import Path
 
 
 def _candidate_paths() -> list[Path]:
+    """Return common Chrome executable install paths based on environment variables."""
+    # 返回基于环境变量的常见 Chrome 可执行文件安装路径
     paths = []
     for env in ("ProgramFiles", "ProgramFiles(x86)", "LOCALAPPDATA"):
         base = os.environ.get(env)
@@ -25,6 +27,8 @@ def _candidate_paths() -> list[Path]:
 
 
 def _find_chrome_via_registry() -> str | None:
+    """Locate Chrome executable via Windows Registry App Paths."""
+    # 通过 Windows 注册表 App Paths 定位 Chrome 可执行文件
     if sys.platform != "win32":
         return None
     try:
@@ -47,6 +51,8 @@ def _find_chrome_via_registry() -> str | None:
 
 
 def find_chrome() -> str | None:
+    """Return path to Chrome executable, checking registry then candidate paths."""
+    # 返回 Chrome 可执行文件路径，优先查注册表，其次查候选路径
     via_reg = _find_chrome_via_registry()
     if via_reg:
         return via_reg
@@ -60,6 +66,8 @@ _HTML_TAG_RE = re.compile(r"<html(\s[^>]*)?>", re.IGNORECASE)
 
 
 def _force_lang_en(html: str) -> str:
+    """Force <html lang="en"> attribute to trigger Chrome translate prompt."""
+    # 强制设置 <html lang="en"> 属性以触发 Chrome 翻译提示
     def replace(match: re.Match) -> str:
         attrs = match.group(1) or ""
         if re.search(r"\blang\s*=", attrs, re.IGNORECASE):
@@ -74,6 +82,7 @@ def _force_lang_en(html: str) -> str:
 
 def open_html_in_chrome_translate(html: str) -> tuple[bool, str]:
     """Persist html to a temp file and open it. Returns (used_chrome, message)."""
+    # 将 html 持久化到临时文件并打开。返回 (是否使用 Chrome, 消息)
     html = _force_lang_en(html)
     fd, name = tempfile.mkstemp(prefix="markdownedit_preview_", suffix=".html")
     with os.fdopen(fd, "w", encoding="utf-8") as f:
