@@ -18,6 +18,8 @@ from src.ui.main_window import MainWindow
 
 
 def main() -> int:
+    """Application entry point: create QApplication, show MainWindow, start event loop."""
+    # 应用入口点：创建 QApplication，显示主窗口，启动事件循环
     QApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)

@@ -29,7 +29,12 @@ RECENT_MAX = 8
 
 
 class MainWindow(QMainWindow):
+    """Main application window: manages tabs, menus, translation worker, and file I/O."""
+    # 主应用窗口：管理标签页、菜单、翻译工作器和文件 I/O
+
     def __init__(self):
+        """Initialize the window, menus, status bar, tab widget, and translation worker."""
+        # 初始化窗口、菜单、状态栏、标签页组件和翻译工作器
         super().__init__()
         icon_path = str(Path(__file__).parent.parent.parent / "resources" / "app_icon.ico")
         self.setWindowIcon(QIcon(icon_path))
@@ -65,6 +70,8 @@ class MainWindow(QMainWindow):
     # ----- tab management -----
 
     def _add_new_tab(self, text: str = "", path: Path | None = None) -> EditorTab:
+        """Create a new editor tab, optionally with preloaded text and file path."""
+        # 创建新的编辑器标签页，可选预加载文本和文件路径
         tab = EditorTab(self._renderer, self)
         tab.set_markdown_text(text)
         tab.current_path = path
@@ -84,6 +91,8 @@ class MainWindow(QMainWindow):
         return tab
 
     def _current_tab(self) -> EditorTab | None:
+        """Return the currently selected EditorTab, or None."""
+        # 返回当前选中的 EditorTab，或 None
         idx = self.tabs.currentIndex()
         if idx >= 0:
             w = self.tabs.widget(idx)
@@ -92,6 +101,8 @@ class MainWindow(QMainWindow):
         return None
 
     def _close_tab(self, index: int) -> None:
+        """Close the tab at given index; prompts to save if dirty."""
+        # 关闭指定索引的标签页；如果有未保存更改则提示
         tab = self.tabs.widget(index)
         if not isinstance(tab, EditorTab):
             return
@@ -102,9 +113,13 @@ class MainWindow(QMainWindow):
         self.tabs.removeTab(index)
 
     def _on_current_tab_changed(self, index: int) -> None:
+        """Update the window title when switching tabs."""
+        # 切换标签页时更新窗口标题
         self._update_title()
 
     def _on_tab_dirty_changed(self, _dirty: bool) -> None:
+        """Update the tab label when its dirty state changes."""
+        # 脏状态变化时更新标签页标题
         tab = self.sender()
         if isinstance(tab, EditorTab):
             idx = self.tabs.indexOf(tab)
@@ -113,15 +128,21 @@ class MainWindow(QMainWindow):
         self._update_title()
 
     def _on_file_dropped(self, path: str) -> None:
+        """Open a dropped file in a new tab."""
+        # 在新标签页中打开拖放的文件
         self._open_path_and_add_tab(path)
 
     def dragEnterEvent(self, event: QDragEnterEvent) -> None:
+        """Accept drag events that carry file URLs."""
+        # 接受携带文件 URL 的拖放事件
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
         else:
             event.ignore()
 
     def dropEvent(self, event: QDropEvent) -> None:
+        """Handle file drops: open .md / .markdown / .txt files in a new tab."""
+        # 处理文件拖放：在新标签页中打开 .md/.markdown/.txt 文件
         for url in event.mimeData().urls():
             if url.isLocalFile():
                 path = url.toLocalFile()
@@ -134,6 +155,8 @@ class MainWindow(QMainWindow):
     # ----- menus / actions -----
 
     def _build_menus(self) -> None:
+        """Build file, view, and help menus with keyboard shortcuts."""
+        # 构建文件、视图和帮助菜单及快捷键
         mb = self.menuBar()
 
         file_menu = mb.addMenu("文件(&F)")
@@ -170,6 +193,8 @@ class MainWindow(QMainWindow):
         self._add_action(help_menu, "关于", self._show_about)
 
     def _add_action(self, menu, text, slot, shortcut=None) -> QAction:
+        """Add a menu action with optional shortcut and return it."""
+        # 添加菜单动作（可选快捷键）并返回
         act = QAction(text, self)
         if shortcut is not None:
             act.setShortcut(shortcut)
@@ -180,9 +205,13 @@ class MainWindow(QMainWindow):
     # ----- file ops -----
 
     def new_file(self) -> None:
+        """Create a new empty editor tab."""
+        # 创建新的空编辑器标签页
         self._add_new_tab()
 
     def open_file(self, path: str | None = None) -> None:
+        """Open a file dialog or the given path, then open in a new tab."""
+        # 打开文件对话框或给定路径，然后在新标签页中打开
         if not path:
             path, _ = QFileDialog.getOpenFileName(
                 self, "打开 Markdown 文件", "", "Markdown (*.md *.markdown);;所有文件 (*.*)"
@@ -192,6 +221,8 @@ class MainWindow(QMainWindow):
         self._open_path_and_add_tab(path)
 
     def _open_path_and_add_tab(self, path: str) -> None:
+        """Read a file and open its contents in a new tab."""
+        # 读取文件并在新标签页中打开其内容
         try:
             text = Path(path).read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as e:
@@ -200,6 +231,8 @@ class MainWindow(QMainWindow):
         self._add_new_tab(text=text, path=Path(path))
 
     def save_file(self) -> bool:
+        """Save the current tab. Triggers 'Save As' if no path set."""
+        # 保存当前标签页。未设置路径时触发另存为
         tab = self._current_tab()
         if tab is None:
             return False
@@ -208,6 +241,8 @@ class MainWindow(QMainWindow):
         return self._write_to(tab, tab.current_path)
 
     def save_file_as(self) -> bool:
+        """Open a 'Save As' dialog for the current tab."""
+        # 打开当前标签页的另存为对话框
         tab = self._current_tab()
         if tab is None:
             return False
@@ -219,6 +254,8 @@ class MainWindow(QMainWindow):
         return self._write_to(tab, Path(path))
 
     def _write_to(self, tab: EditorTab, path: Path) -> bool:
+        """Write tab content to disk and update dirty state."""
+        # 将标签页内容写入磁盘并更新脏状态
         try:
             path.write_text(tab.markdown_text(), encoding="utf-8")
         except OSError as e:
@@ -236,6 +273,8 @@ class MainWindow(QMainWindow):
         return True
 
     def _confirm_discard_tab(self, tab: EditorTab) -> bool:
+        """Prompt user to save/discard/cancel for a dirty tab. Returns True if ok to discard."""
+        # 提示用户保存/丢弃/取消脏标签页。可丢弃时返回 True
         if not tab.is_dirty:
             return True
         name = tab.current_path.name if tab.current_path else "未命名"
@@ -251,6 +290,8 @@ class MainWindow(QMainWindow):
         return ret == QMessageBox.Discard
 
     def _confirm_discard(self) -> bool:
+        """Prompt for all dirty tabs when closing the window."""
+        # 关闭窗口时提示所有脏标签页
         for i in range(self.tabs.count()):
             tab = self.tabs.widget(i)
             if isinstance(tab, EditorTab) and tab.is_dirty:
@@ -261,6 +302,8 @@ class MainWindow(QMainWindow):
     # ----- recent files -----
 
     def _push_recent(self, path: str) -> None:
+        """Add a path to the recent files list (persisted via QSettings)."""
+        # 将路径添加到最近文件列表（通过 QSettings 持久化）
         items: list[str] = self._settings.value("recent", [], type=list) or []
         if path in items:
             items.remove(path)
@@ -270,6 +313,8 @@ class MainWindow(QMainWindow):
         self._rebuild_recent_menu()
 
     def _rebuild_recent_menu(self) -> None:
+        """Rebuild the recent files submenu from QSettings."""
+        # 从 QSettings 重建最近文件子菜单
         self._recent_menu.clear()
         items: list[str] = self._settings.value("recent", [], type=list) or []
         if not items:
@@ -285,23 +330,31 @@ class MainWindow(QMainWindow):
     # ----- views / rendering -----
 
     def _switch_view(self, index: int) -> None:
+        """Switch the right pane of the current tab to a different view."""
+        # 将当前标签页的右侧面板切换到不同视图
         tab = self._current_tab()
         if tab:
             tab.set_view_index(index)
 
-    # ----- scroll sync -----
+    # ----- scroll sync (currently unused placeholder) -----
 
     def _sync_scroll(self, _value: int) -> None:
+        """Placeholder: reserved for editor-to-preview scroll synchronization."""
+        # 占位符：预留用于编辑器和预览之间的滚动同步
         pass
 
     # ----- misc -----
 
     def _update_title(self) -> None:
+        """Set window title to current tab name and app version."""
+        # 将窗口标题设置为当前标签页名称和应用版本
         tab = self._current_tab()
         name = tab.tab_title if tab else "未命名"
         self.setWindowTitle(f"{name} — {APP_NAME} v{__version__}")
 
     def _show_about(self) -> None:
+        """Display the about dialog."""
+        # 显示关于对话框
         QMessageBox.about(
             self,
             "关于",
@@ -312,6 +365,8 @@ class MainWindow(QMainWindow):
     # ----- preview actions -----
 
     def _open_preview_in_chrome(self) -> None:
+        """Open the current rendered HTML in Chrome to trigger browser translation."""
+        # 在 Chrome 中打开当前渲染的 HTML 以触发浏览器翻译
         tab = self._current_tab()
         if tab is None:
             return
@@ -322,6 +377,8 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "打开失败", msg)
 
     def _save_preview_as_html(self) -> None:
+        """Save the rendered HTML to a file chosen via dialog."""
+        # 将渲染的 HTML 保存到通过对话框选择的文件
         tab = self._current_tab()
         if tab is None:
             return
@@ -338,6 +395,8 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "保存失败", str(e))
 
     def _save_preview_as_pdf(self) -> None:
+        """Save the current page as a PDF file."""
+        # 将当前页面保存为 PDF 文件
         tab = self._current_tab()
         if tab is None:
             return
@@ -353,6 +412,8 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "保存失败", str(e))
 
     def _save_preview_as_word(self) -> None:
+        """Convert Markdown to .docx and save via dialog."""
+        # 将 Markdown 转换为 .docx 并通过对话框保存
         tab = self._current_tab()
         if tab is None:
             return
@@ -385,6 +446,8 @@ class MainWindow(QMainWindow):
     # ----- translation wiring -----
 
     def _init_worker(self) -> None:
+        """Start the translation worker if the Argos model exists; disable translation view otherwise."""
+        # 如果 Argos 模型存在则启动翻译工作器；否则禁用翻译视图
         if not self._dict_path.exists():
             self.statusBar().showMessage(
                 "悬停词典未找到 (resources/dict/ecdict.sqlite),悬停翻译已禁用", 8000
@@ -406,20 +469,28 @@ class MainWindow(QMainWindow):
             self._preview_action.setChecked(True)
 
     def _on_paragraph_translated(self, _original: str, _translation: str) -> None:
+        """Start the debounced refresh timer when a translation arrives."""
+        # 当翻译结果到达时启动防抖刷新定时器
         if not self._refresh_pending:
             self._refresh_pending = True
             self._refresh_timer.start(150)
 
     def _do_refresh_translation(self) -> None:
+        """Refresh the active tab's translation pane after debounce interval."""
+        # 在防抖间隔后刷新活动标签页的翻译面板
         self._refresh_pending = False
         tab = self._current_tab()
         if tab and tab.current_view_index() == VIEW_TRANSLATION:
             tab._refresh_right_pane()
 
     def _on_translation_failed(self, message: str) -> None:
+        """Show a translation failure message in the status bar."""
+        # 在状态栏显示翻译失败消息
         self.statusBar().showMessage(f"翻译失败: {message}", 6000)
 
     def closeEvent(self, event) -> None:
+        """Handle window close: confirm dirty tabs and stop the translation worker."""
+        # 处理窗口关闭：确认脏标签页并停止翻译工作器
         if not self._confirm_discard():
             event.ignore()
             return

@@ -4,6 +4,8 @@ from typing import Iterable
 
 
 def _unwrap_translation(t):
+    """Strip CachedTranslation wrapper to access the underlying PackageTranslation."""
+    # 剥离 CachedTranslation 包装层以访问底层的 PackageTranslation
     from argostranslate.translate import CachedTranslation, PackageTranslation
 
     while isinstance(t, CachedTranslation):
@@ -15,8 +17,11 @@ def _unwrap_translation(t):
 
 class TranslationEngine:
     """Wraps Argos Translate for English to Chinese paragraph-level translation."""
+    # 封装 Argos Translate 用于英译中段落级翻译
 
     def __init__(self, model_path: Path):
+        """Load the Argos model, install it, and initialize the CTranslate2 translator."""
+        # 加载 Argos 模型，安装并初始化 CTranslate2 翻译器
         import argostranslate.package
         import argostranslate.translate
 
@@ -34,6 +39,8 @@ class TranslationEngine:
         self._load_translator()
 
     def _load_translator(self) -> None:
+        """Lazily create the underlying CTranslate2 Translator instance."""
+        # 延迟创建底层 CTranslate2 Translator 实例
         from argostranslate import settings
 
         pkg_t = _unwrap_translation(self._t)
@@ -49,11 +56,15 @@ class TranslationEngine:
             )
 
     def translate(self, text: str) -> str:
+        """Translate a single text string. Returns empty string for blank input."""
+        # 翻译单个文本字符串。空白输入返回空字符串
         if not text or not text.strip():
             return ""
         return self._t.translate(text)
 
     def translate_many(self, texts: Iterable[str]) -> list[str]:
+        """Batch-translate multiple texts by merging sentences into a single CTranslate2 call."""
+        # 将多个文本的句子合并到一次 CTranslate2 调用中批量翻译
         texts = list(texts)
 
         from argostranslate import settings
@@ -64,7 +75,7 @@ class TranslationEngine:
 
             pkg_t.translator = ctranslate2.Translator(
                 str(pkg_t.pkg.package_path / "model"),
-                device=getattr(settings, "device", "cpu"),
+                device=getattr(settings, "device", "gpu"),
                 inter_threads=getattr(settings, "inter_threads", 1),
                 intra_threads=getattr(settings, "intra_threads", 0),
                 compute_type=getattr(settings, "compute_type", "default"),

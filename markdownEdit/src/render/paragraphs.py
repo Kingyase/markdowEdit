@@ -1,5 +1,6 @@
 def split_paragraphs(text: str) -> list[str]:
     """Split markdown text on blank lines, preserving fenced code blocks intact."""
+    # 按空行分割 Markdown 文本，完整保留围栏代码块
     blocks: list[str] = []
     buf: list[str] = []
     in_fence = False
