@@ -1,18 +1,32 @@
 """Build resources/dict/ecdict.sqlite from the ECDICT CSV.
 
 Usage:
-    python scripts/build_ecdict.py path/to/ecdict.csv
+    python scripts/build_ecdict.py [path/to/ecdict.csv]
 
-Source CSV: https://github.com/skywind3000/ECDICT (basic edition,
-fields: word, phonetic, definition, translation, ...).
-We keep only word, translation, phonetic for a lean ~50MB DB.
+If no CSV path is given, the script will download the ECDICT basic edition
+from GitHub automatically.
+
+Source CSV: https://github.com/skywind3000/ECDICT
+Fields kept: word, translation, phonetic
 """
 from __future__ import annotations
 
 import csv
 import sqlite3
 import sys
+import urllib.request
 from pathlib import Path
+
+
+ECDICT_URL = "https://raw.githubusercontent.com/skywind3000/ECDICT/master/ecdict.csv"
+
+
+def _download_csv(url: str, dest: Path) -> None:
+    """Download the ECDICT CSV to dest, showing a simple progress indicator."""
+    print(f"Downloading {url} ...")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    urllib.request.urlretrieve(url, dest)
+    print(f"Downloaded {dest} ({dest.stat().st_size / 1e6:.1f} MB)")
 
 
 def build(csv_path: Path, out_path: Path) -> None:
@@ -49,9 +63,24 @@ def build(csv_path: Path, out_path: Path) -> None:
     print(f"Wrote {out_path} ({out_path.stat().st_size / 1e6:.1f} MB)")
 
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python scripts/build_ecdict.py <ecdict.csv>", file=sys.stderr)
-        sys.exit(2)
+def main():
     project_root = Path(__file__).resolve().parents[1]
-    build(Path(sys.argv[1]), project_root / "resources" / "dict" / "ecdict.sqlite")
+    out_path = project_root / "resources" / "dict" / "ecdict.sqlite"
+
+    if len(sys.argv) >= 2:
+        csv_path = Path(sys.argv[1])
+        if not csv_path.exists():
+            print(f"Error: CSV file not found: {csv_path}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        csv_path = project_root / "resources" / "dict" / "ecdict.csv"
+        if not csv_path.exists():
+            _download_csv(ECDICT_URL, csv_path)
+        else:
+            print(f"Using cached CSV: {csv_path}")
+
+    build(csv_path, out_path)
+
+
+if __name__ == "__main__":
+    main()

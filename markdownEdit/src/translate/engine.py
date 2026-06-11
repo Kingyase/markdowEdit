@@ -42,10 +42,10 @@ class TranslationEngine:
 
             pkg_t.translator = ctranslate2.Translator(
                 str(pkg_t.pkg.package_path / "model"),
-                device=settings.device,
-                inter_threads=settings.inter_threads,
-                intra_threads=settings.intra_threads,
-                compute_type=settings.compute_type,
+                device=getattr(settings, "device", "cpu"),
+                inter_threads=getattr(settings, "inter_threads", 1),
+                intra_threads=getattr(settings, "intra_threads", 0),
+                compute_type=getattr(settings, "compute_type", "default"),
             )
 
     def translate(self, text: str) -> str:
@@ -64,10 +64,10 @@ class TranslationEngine:
 
             pkg_t.translator = ctranslate2.Translator(
                 str(pkg_t.pkg.package_path / "model"),
-                device=settings.device,
-                inter_threads=settings.inter_threads,
-                intra_threads=settings.intra_threads,
-                compute_type=settings.compute_type,
+                device=getattr(settings, "device", "cpu"),
+                inter_threads=getattr(settings, "inter_threads", 1),
+                intra_threads=getattr(settings, "intra_threads", 0),
+                compute_type=getattr(settings, "compute_type", "default"),
             )
 
         sentencizer = pkg_t.sentencizer
@@ -97,7 +97,7 @@ class TranslationEngine:
             all_tokenized,
             target_prefix=target_prefix,
             replace_unknowns=True,
-            max_batch_size=settings.batch_size,
+            max_batch_size=getattr(settings, "batch_size", 0),
             batch_type="tokens",
             beam_size=1,
             num_hypotheses=1,
